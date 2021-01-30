@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:widgets/src/providers/menu_provider.dart';
 import 'package:widgets/src/utils/icon_util_string.dart';
 
+import 'alert_page.dart';
+
 class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -19,24 +21,31 @@ class HomePage extends StatelessWidget {
       initialData: [],
       builder: (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
         return ListView(
-          children: _itemsList(snapshot.data),
+          children: _itemsList(snapshot.data, context),
         );
       },
     );
   }
 
-  List<Widget> _itemsList(List<dynamic> data) {
+  List<Widget> _itemsList(List<dynamic> data, BuildContext context) {
     final List<Widget> options = [];
 
-    data.forEach((element) {
+    data.forEach((option) {
       final tempWidget = ListTile(
-        title: Text(element['text']),
-        leading: getIcon(element['icon']),
+        title: Text(option['text']),
+        leading: getIcon(option['icon']),
         trailing: Icon(
           Icons.keyboard_arrow_right,
           color: Colors.blue,
         ),
-        onTap: () {},
+        onTap: () {
+          Navigator.pushNamed(context, option['route']);
+
+          /* final route = MaterialPageRoute(builder: (context) {
+            return AlertPage();
+          });
+          Navigator.push(context, route); */
+        },
       );
       options..add(tempWidget)..add(Divider());
     });
