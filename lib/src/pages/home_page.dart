@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:widgets/src/providers/menu_provider.dart';
 import 'package:widgets/src/utils/icon_util_string.dart';
 
-import 'alert_page.dart';
-
 class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
