@@ -15,6 +15,11 @@
 			"route": "card",
 			"icon": "folder_open",
 			"text": "Cards"
+		},
+		{
+			"route": "animatedContainer",
+			"icon": "donut_large",
+			"text": "Animated Container"
 		}
 	]
 }
