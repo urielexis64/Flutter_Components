@@ -12,11 +12,15 @@ class _InputPageState extends State<InputPage> {
   String _email = '';
   String _date = '';
 
+  String _selectedOption = 'Fly';
+
+  List<String> _powers = ['Fly', 'X Ray', 'Teleport'];
+
   TextEditingController _inputFieldDateController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    timeDilation = 3;
+    /* timeDilation = 2.5; */
     return Scaffold(
       appBar: AppBar(title: Text('Inputs')),
       body: ListView(
@@ -30,8 +34,9 @@ class _InputPageState extends State<InputPage> {
           Divider(),
           _createDate(context),
           Divider(),
-          _createPerson(),
+          _createDropdown(),
           Divider(),
+          _createPerson(),
         ],
       ),
     );
@@ -59,6 +64,7 @@ class _InputPageState extends State<InputPage> {
     return ListTile(
       title: Text('Name: $_name'),
       subtitle: Text('Email: $_email'),
+      trailing: Text(_selectedOption),
     );
   }
 
@@ -124,5 +130,35 @@ class _InputPageState extends State<InputPage> {
         _inputFieldDateController.text = _date;
       });
     }
+  }
+
+  List<DropdownMenuItem<String>> getDropdownOptions() {
+    List<DropdownMenuItem<String>> list = List();
+
+    _powers.forEach((power) {
+      list.add(DropdownMenuItem(child: Text(power), value: power));
+    });
+
+    return list;
+  }
+
+  Widget _createDropdown() {
+    return Row(
+      children: [
+        Icon(Icons.select_all),
+        SizedBox(width: 20),
+        Expanded(
+          child: DropdownButton(
+            items: getDropdownOptions(),
+            onChanged: (value) => {
+              setState(() {
+                _selectedOption = value;
+              })
+            },
+            value: _selectedOption,
+          ),
+        ),
+      ],
+    );
   }
 }
