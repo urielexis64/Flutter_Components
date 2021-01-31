@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_rounded_date_picker/rounded_picker.dart';
+import 'package:flutter/scheduler.dart' show timeDilation;
 
 class InputPage extends StatefulWidget {
   @override
@@ -8,9 +10,13 @@ class InputPage extends StatefulWidget {
 class _InputPageState extends State<InputPage> {
   String _name = '';
   String _email = '';
+  String _date = '';
+
+  TextEditingController _inputFieldDateController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    timeDilation = 3;
     return Scaffold(
       appBar: AppBar(title: Text('Inputs')),
       body: ListView(
@@ -22,8 +28,10 @@ class _InputPageState extends State<InputPage> {
           Divider(),
           _createPasswordField(),
           Divider(),
+          _createDate(context),
+          Divider(),
           _createPerson(),
-          Divider()
+          Divider(),
         ],
       ),
     );
@@ -70,8 +78,6 @@ class _InputPageState extends State<InputPage> {
 
   Widget _createPasswordField() {
     return TextField(
-      autocorrect: false,
-      enableSuggestions: false,
       obscureText: true,
       decoration: InputDecoration(
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
@@ -82,5 +88,41 @@ class _InputPageState extends State<InputPage> {
           icon: Icon(Icons.lock)),
       onChanged: (value) => setState(() => _email = value),
     );
+  }
+
+  Widget _createDate(buildContext) {
+    return TextField(
+      controller: _inputFieldDateController,
+      enableInteractiveSelection: false,
+      decoration: InputDecoration(
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
+          counter: Text('Letters: 0'),
+          labelText: "Birth date",
+          helperText: "Your birth date",
+          suffixIcon: Icon(Icons.perm_contact_calendar),
+          icon: Icon(Icons.calendar_today)),
+      onTap: () {
+        FocusScope.of(context).requestFocus(new FocusNode());
+        _selectDate(context);
+      },
+    );
+  }
+
+  void _selectDate(BuildContext context) async {
+    DateTime picked = await showRoundedDatePicker(
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime(1970),
+        lastDate: DateTime(2025),
+        locale: Locale('es', 'ES'),
+        imageHeader: NetworkImage(
+            'https://i.pinimg.com/originals/77/90/cc/7790ccc06dc3a75bd99dba04bd96d49c.jpg'));
+
+    if (picked != null) {
+      setState(() {
+        _date = picked.toString().split(' ')[0];
+        _inputFieldDateController.text = _date;
+      });
+    }
   }
 }
