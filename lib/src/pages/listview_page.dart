@@ -38,29 +38,42 @@ class _ListPageState extends State<ListPage> {
   }
 
   Widget _createList() {
-    return ListView.builder(
-        controller: _scrollController,
-        itemCount: _numbersList.length,
-        itemBuilder: (context, index) {
-          return Card(
-            margin: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-            clipBehavior: Clip.antiAlias,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-            child: FadeInImage(
-              height: 200,
-              fit: BoxFit.cover,
-              fadeInDuration: Duration(milliseconds: 200),
-              image: NetworkImage(
-                  'https://picsum.photos/500/300/?image=${_numbersList[index]}'),
-              placeholder: AssetImage('assets/loadingImage.gif'),
-            ),
-          );
-        });
+    return RefreshIndicator(
+      child: ListView.builder(
+          controller: _scrollController,
+          itemCount: _numbersList.length,
+          itemBuilder: (context, index) {
+            return Card(
+              margin: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+              clipBehavior: Clip.antiAlias,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8)),
+              child: FadeInImage(
+                height: 200,
+                fit: BoxFit.cover,
+                fadeInDuration: Duration(milliseconds: 200),
+                image: NetworkImage(
+                    'https://picsum.photos/500/300/?image=${_numbersList[index]}'),
+                placeholder: AssetImage('assets/loadingImage.gif'),
+              ),
+            );
+          }),
+      onRefresh: getPage1,
+    );
+  }
+
+  Future<Null> getPage1() async {
+    final duration = Duration(seconds: 1);
+    Timer(duration, () {
+      _numbersList.clear();
+      _lastItem++;
+      _add10();
+    });
+    return Future.delayed(duration);
   }
 
   void _add10() {
-    for (var i = 1; i <= 10; i++) {
+    for (var i = 0; i < 10; i++) {
       _numbersList.add(++_lastItem);
     }
 
